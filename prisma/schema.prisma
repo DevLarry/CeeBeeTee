@@ -1,0 +1,76 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Staff {
+  id           Int        @id @default(autoincrement())
+  email        String     @unique
+  name         String?
+  questions    Question[]
+  password     String
+  departmentId Int
+  department   Department @relation(fields: [departmentId], references: [id])
+}
+
+model Department {
+  id       Int       @id @default(autoincrement())
+  name     String    @unique
+  courses  Course[]
+  staffs   Staff[]
+  students Student[]
+}
+
+model Course {
+  id           Int          @id @default(autoincrement())
+  code         String       @unique
+  title        String
+  departmentId Int
+  questions    Question[]
+  department   Department   @relation(fields: [departmentId], references: [id])
+  Registery    Registered[]
+}
+
+model Question {
+  id             Int      @id @default(autoincrement())
+  title          String
+  answer         Option[]
+  options        String
+  multipleChiose Boolean? @default(false)
+  course         Course   @relation(fields: [courseId], references: [id])
+  courseId       Int
+  author         Staff    @relation(fields: [authorId], references: [id])
+  authorId       Int
+}
+
+model Option {
+  id         Int      @id @default(autoincrement())
+  questionId Int
+  isAnswer   Boolean  @default(false)
+  question   Question @relation(fields: [questionId], references: [id])
+}
+
+model Registered {
+  id        Int     @id @default(autoincrement())
+  courseId  Int
+  course    Course  @relation(fields: [courseId], references: [id])
+  studentId Int
+  student   Student @relation(fields: [studentId], references: [id])
+}
+
+model Student {
+  id           Int          @id @default(autoincrement())
+  email        String       @unique
+  name         String
+  departmentId Int
+  department   Department   @relation(fields: [departmentId], references: [id])
+  password     String
+  courses      Registered[]
+}
