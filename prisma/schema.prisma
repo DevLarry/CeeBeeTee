@@ -14,9 +14,9 @@ model Staff {
   id           Int        @id @default(autoincrement())
   email        String     @unique
   name         String?
-  questions    Question[]
   password     String
   departmentId Int
+  questions    Question[]
   department   Department @relation(fields: [departmentId], references: [id])
 }
 
@@ -41,13 +41,12 @@ model Course {
 model Question {
   id             Int      @id @default(autoincrement())
   title          String
-  answer         Option[]
-  options        String
-  multipleChiose Boolean? @default(false)
-  course         Course   @relation(fields: [courseId], references: [id])
   courseId       Int
-  author         Staff    @relation(fields: [authorId], references: [id])
   authorId       Int
+  multipleChiose Boolean? @default(false)
+  options         Option[]
+  course         Course   @relation(fields: [courseId], references: [id])
+  author         Staff    @relation(fields: [authorId], references: [id])
 }
 
 model Option {
@@ -60,8 +59,8 @@ model Option {
 model Registered {
   id        Int     @id @default(autoincrement())
   courseId  Int
-  course    Course  @relation(fields: [courseId], references: [id])
   studentId Int
+  course    Course  @relation(fields: [courseId], references: [id])
   student   Student @relation(fields: [studentId], references: [id])
 }
 
@@ -70,7 +69,7 @@ model Student {
   email        String       @unique
   name         String
   departmentId Int
-  department   Department   @relation(fields: [departmentId], references: [id])
   password     String
+  department   Department   @relation(fields: [departmentId], references: [id])
   courses      Registered[]
 }

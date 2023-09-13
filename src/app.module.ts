@@ -8,9 +8,11 @@ import { QuestionModule } from './question/question.module';
 import { StudentModule } from './student/student.module';
 import { DepartmentModule } from './department/department.module';
 import { CourseModule } from './course/course.module';
+import { RegisteredModule } from './registered/registered.module';
+import { OptionModule } from './option/option.module';
 
 @Module({
-  imports: [UserModule, StaffModule, QuestionModule, StudentModule, DepartmentModule, CourseModule],
+  imports: [UserModule, StaffModule, QuestionModule, StudentModule, DepartmentModule, CourseModule, RegisteredModule, OptionModule],
   controllers: [AppController],
   providers: [AppService, PrismaService],
 })
