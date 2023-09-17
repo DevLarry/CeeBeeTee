@@ -1,7 +1,10 @@
+import { CreateOptionDto } from 'src/option/dto/create-option.dto';
+
 export class CreateQuestionDto {
   id?: number;
   title: string;
-  multipleCoice: boolean = false;
-  author: number;
-  course: number;
+  multipleChoice?: boolean = false;
+  authorId: number;
+  courseId: number;
+  options?: CreateOptionDto[];
 }

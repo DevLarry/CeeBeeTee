@@ -1,26 +1,47 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
+import { PrismaService } from 'src/prisma.service';
+import { Course } from './entities/course.entity';
 
 @Injectable()
 export class CourseService {
-  create(createCourseDto: CreateCourseDto) {
-    return 'This action adds a new course';
+  constructor(private prisma: PrismaService) {}
+  async create(createCourseDto: CreateCourseDto): Promise<Course> {
+    // const {name, code, title, departmentId, } = createCourseDto;
+    try {
+      return this.prisma.course.create({
+        data: {
+          ...createCourseDto,
+        },
+      });
+    } catch (e) {
+      throw new HttpException('Course already exists!', HttpStatus.FORBIDDEN);
+    }
   }
 
-  findAll() {
-    return `This action returns all course`;
+  findAll(dept?: number) {
+    const obj: any = {};
+    if (dept) obj.take = dept;
+    return this.prisma.course.findMany(obj);
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} course`;
+    return this.prisma.course.findUnique({
+      where: {
+        id,
+      },
+    });
   }
 
   update(id: number, updateCourseDto: UpdateCourseDto) {
-    return `This action updates a #${id} course`;
+    return this.prisma.course.update({
+      where: { id },
+      data: { ...updateCourseDto },
+    });
   }
 
   remove(id: number) {
-    return `This action removes a #${id} course`;
+    return this.prisma.course.delete({ where: { id } });
   }
 }

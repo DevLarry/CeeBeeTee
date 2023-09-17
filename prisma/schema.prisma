@@ -6,26 +6,24 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
-model Staff {
-  id           Int        @id @default(autoincrement())
-  email        String     @unique
-  name         String?
-  password     String
-  departmentId Int
-  questions    Question[]
-  department   Department @relation(fields: [departmentId], references: [id])
+model School {
+  id          Int          @id @default(autoincrement())
+  name        String       @unique
+  description String?
+  Departments  Department[]
 }
 
 model Department {
-  id       Int       @id @default(autoincrement())
-  name     String    @unique
+  id       Int      @id @default(autoincrement())
+  name     String   @unique
+  schoolId Int
+  school   School   @relation(fields: [schoolId], references: [id])
   courses  Course[]
-  staffs   Staff[]
-  students Student[]
+  students User[]
 }
 
 model Course {
@@ -43,10 +41,10 @@ model Question {
   title          String
   courseId       Int
   authorId       Int
-  multipleChiose Boolean? @default(false)
-  options         Option[]
+  multipleChoice Boolean  @default(false)
+  options        Option[]
   course         Course   @relation(fields: [courseId], references: [id])
-  author         Staff    @relation(fields: [authorId], references: [id])
+  author         User     @relation(fields: [authorId], references: [id])
 }
 
 model Option {
@@ -57,19 +55,28 @@ model Option {
 }
 
 model Registered {
-  id        Int     @id @default(autoincrement())
+  id        Int    @id @default(autoincrement())
   courseId  Int
   studentId Int
-  course    Course  @relation(fields: [courseId], references: [id])
-  student   Student @relation(fields: [studentId], references: [id])
+  course    Course @relation(fields: [courseId], references: [id])
+  student   User   @relation(fields: [studentId], references: [id])
 }
 
-model Student {
+model User {
   id           Int          @id @default(autoincrement())
   email        String       @unique
-  name         String
-  departmentId Int
+  name         String?
+  username     String
   password     String
+  departmentId Int
+  questions    Question[]
   department   Department   @relation(fields: [departmentId], references: [id])
   courses      Registered[]
+  role         Role         @default(STUDENT)
+}
+
+enum Role {
+  OWNER
+  STUDENT
+  STAFF
 }

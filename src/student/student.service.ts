@@ -11,15 +11,16 @@ export class StudentService {
   constructor(private prisma: PrismaService) {}
 
   async create(createStudentDto: CreateStudentDto) {
-    const { name, email, department, password } = createStudentDto;
+    const { name, email, username, departmentId, password } = createStudentDto;
     const hashed = await hash(password, 10);
     let res;
     try {
-      res = await this.prisma.student.create({
+      res = await this.prisma.user.create({
         data: {
           name,
           email,
-          departmentId: department,
+          username,
+          departmentId,
           password: hashed,
         },
       });
@@ -31,24 +32,47 @@ export class StudentService {
   }
 
   findAll() {
-    return this.prisma.student.findMany();
+    return this.prisma.user.findMany();
   }
 
   findOne(id: number) {
-    return this.prisma.student.findFirst({
+    return this.prisma.user.findFirst({
       where: {
         id,
       },
     });
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  Authenticate(user: { email: string; password: string }) {
+    return this.prisma.user.findUnique({
+      where: {
+        ...user,
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+      },
+    });
+  }
+
+  findOneByEmail(email: string) {
+    return this.prisma.user.findFirst({
+      where: {
+        OR: [{ email }, { username: email }],
+      },
+    });
+  }
+
   update(id: number, updateStudentDto: UpdateStudentDto) {
-    return `This action updates a #${id} student`;
+    return this.prisma.user.update({
+      where: { id },
+      data: { ...updateStudentDto },
+    });
   }
 
   remove(id: number) {
-    return this.prisma.student.delete({
+    return this.prisma.user.delete({
       where: {
         id,
       },

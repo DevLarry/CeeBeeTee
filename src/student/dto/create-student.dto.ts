@@ -2,6 +2,7 @@ export class CreateStudentDto {
   id?: number;
   name: string;
   email: string;
-  department: number;
+  username: string;
+  departmentId: number;
   password: string;
 }

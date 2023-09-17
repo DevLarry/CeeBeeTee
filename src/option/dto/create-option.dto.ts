@@ -1,5 +1,5 @@
 export class CreateOptionDto {
   id?: number;
-  question: number;
+  questionId: number;
   isAnswer: boolean = false;
 }

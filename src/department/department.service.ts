@@ -10,7 +10,7 @@ export class DepartmentService {
     try {
       return await this.prisma.department.create({
         data: {
-          name: createDepartmentDto.name,
+          ...createDepartmentDto,
         },
       });
     } catch (e) {

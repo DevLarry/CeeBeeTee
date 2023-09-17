@@ -10,10 +10,24 @@ import { DepartmentModule } from './department/department.module';
 import { CourseModule } from './course/course.module';
 import { RegisteredModule } from './registered/registered.module';
 import { OptionModule } from './option/option.module';
+import { AuthService } from './auth/auth.service';
+import { AuthModule } from './auth/auth.module';
+import { SchoolModule } from './school/school.module';
 
 @Module({
-  imports: [UserModule, StaffModule, QuestionModule, StudentModule, DepartmentModule, CourseModule, RegisteredModule, OptionModule],
+  imports: [
+    UserModule,
+    StaffModule,
+    QuestionModule,
+    StudentModule,
+    DepartmentModule,
+    CourseModule,
+    RegisteredModule,
+    OptionModule,
+    AuthModule,
+    SchoolModule,
+  ],
   controllers: [AppController],
-  providers: [AppService, PrismaService],
+  providers: [AppService, PrismaService, AuthService],
 })
 export class AppModule {}

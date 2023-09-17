@@ -6,12 +6,16 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { StudentService } from './student.service';
 import { CreateStudentDto } from './dto/create-student.dto';
 import { UpdateStudentDto } from './dto/update-student.dto';
+import { AuthGuard } from 'src/auth/guards/auth.guard';
+import { StaffGuard } from 'src/auth/guards/staff.guard';
 
 @Controller('student')
+@UseGuards(AuthGuard)
 export class StudentController {
   constructor(private readonly studentService: StudentService) {}
 
@@ -35,6 +39,7 @@ export class StudentController {
     return this.studentService.update(+id, updateStudentDto);
   }
 
+  @UseGuards(StaffGuard)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.studentService.remove(+id);
